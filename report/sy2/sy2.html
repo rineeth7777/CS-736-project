@@ -1,0 +1,1292 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>sy2</title><meta name="generator" content="MATLAB 9.8"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-05-10"><meta name="DC.source" content="sy2.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">performing analysis on sy1</a></li><li><a href="#3">creating input image and image mask</a></li><li><a href="#4">plotting initial image</a></li><li><a href="#5">introducing noise</a></li><li><a href="#6">modifying image for better k-means classification</a></li><li><a href="#7">k-means initialization (repeat till we get -1 as a mean and with no warnings of non-convergence under 100 iterations)</a></li><li><a href="#8">changing data format to operate FCM, keeping binary labelling</a></li><li><a href="#9">performing fcm</a></li><li><a href="#10">plotting fcm images and obj_func vs iterations</a></li><li><a href="#11">displaying accuracy of fcm</a></li><li><a href="#12">performing fcm_s</a></li><li><a href="#13">plotting fcm_s images and obj_func vs iterations</a></li><li><a href="#14">displaying accuracy of fcm_s</a></li><li><a href="#15">performing fcm_s1</a></li><li><a href="#16">plotting fcm_s1 images and obj_func vs iterations</a></li><li><a href="#17">displaying accuracy of fcm_s1</a></li><li><a href="#18">performing fcm_en</a></li><li><a href="#19">plotting fcm_en images and obj_func vs iterations</a></li><li><a href="#20">displaying accuracy of fcm_en</a></li><li><a href="#21">performing fgfcm</a></li><li><a href="#22">plotting fcm_fgfcm images and obj_func vs iterations</a></li><li><a href="#23">displaying accuracy of fgfcm</a></li><li><a href="#24">performing frfcm</a></li><li><a href="#25">plotting frfcm images and obj_func vs iterations</a></li><li><a href="#26">displaying mse of frfcm</a></li><li><a href="#27">defining functions</a></li><li><a href="#29">main loop</a></li><li><a href="#30">compute membership matrix U according to cluster centers</a></li><li><a href="#31">median filtering</a></li></ul></div><pre class="codeinput">clear; clc;
+close <span class="string">all</span>;
+<span class="comment">% load('../data/assignmentSegmentBrain.mat');</span>
+</pre><h2 id="2">performing analysis on sy1</h2><pre class="codeinput">input_image = imread(<span class="string">'../data/sy2.bmp'</span>);
+input_imagefr = input_image;
+noise = 0.03;
+</pre><h2 id="3">creating input image and image mask</h2><p>input_image = rgb2gray(input_image);</p><pre class="codeinput">input_image = cast(input_image,<span class="string">'double'</span>);
+input_image=input_image./256;
+
+imageMask=ones(size(input_image));
+
+<span class="comment">% imageMask=zeros(size(input_image));</span>
+<span class="comment">% imageMask(input_image~=0) = 1;</span>
+<span class="comment">%input_image = imageData.*imageMask;</span>
+<span class="comment">%imdb=imageData.*imageMask;</span>
+[m, n] = size(input_image);
+</pre><h2 id="4">plotting initial image</h2><pre class="codeinput">figure();
+imshow(input_image);
+</pre><img vspace="5" hspace="5" src="sy2_01.png" alt=""> <h2 id="5">introducing noise</h2><pre class="codeinput">input_image_noisy=imnoise(input_image,<span class="string">'gaussian'</span>,noise).*imageMask;
+input_image_noisyfr=imnoise(input_imagefr,<span class="string">'gaussian'</span>,0.03);
+imshow(input_image_noisy);
+</pre><img vspace="5" hspace="5" src="sy2_02.png" alt=""> <h2 id="6">modifying image for better k-means classification</h2><p>cmp = ones(size(imageMask)) - imageMask; cmp = cmp*(-1); res = input_image; res = res + cmp;</p><h2 id="7">k-means initialization (repeat till we get -1 as a mean and with no warnings of non-convergence under 100 iterations)</h2><pre class="codeinput">[init_labels, init_means] = kmeans(reshape(input_image_noisy, [m*n, 1]), 4);
+
+<span class="comment">% while(true)</span>
+<span class="comment">%     lastwarn('');</span>
+<span class="comment">%     [init_labels, init_means] = kmeans(reshape(res, [m*n, 1]), 4);</span>
+<span class="comment">%     [warnMsg, warnId] = lastwarn;</span>
+<span class="comment">%     if ((isempty(warnMsg)) &amp;&amp; (any(init_means(:) == -1)))</span>
+<span class="comment">%         break;</span>
+<span class="comment">%     end</span>
+<span class="comment">% end</span>
+
+init_labels = reshape(init_labels,[m,n]);
+
+<span class="comment">% plotting k-means image</span>
+k_means_img = zeros(m,n);
+<span class="keyword">for</span> k = 1:4
+    k_means_img(init_labels == k) = init_means(k);
+<span class="keyword">end</span>
+figure();
+imshow(k_means_img);
+</pre><img vspace="5" hspace="5" src="sy2_03.png" alt=""> <h2 id="8">changing data format to operate FCM, keeping binary labelling</h2><pre class="codeinput">means = [];
+memberships = [];
+<span class="keyword">for</span> k=1:4
+    <span class="keyword">if</span> (init_means(k) ~= -1)
+        mean = init_means(k);
+        means = [means; mean];
+        tmp = zeros(m, n);
+        tmp(init_labels == k) = 1;
+        memberships = cat(3, memberships, tmp);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><h2 id="9">performing fcm</h2><pre class="codeinput">q = 2;
+[img_fcm, means_fcm, memberships_fcm, obj_vals_fcm, n_iter_fcm] = fcm(input_image_noisy, q, means, imageMask, memberships);
+</pre><h2 id="10">plotting fcm images and obj_func vs iterations</h2><pre class="codeinput"><span class="keyword">for</span> k = 1:4
+    figure();
+    imshow(img_fcm(:,:,k));
+<span class="keyword">end</span>
+figure();
+plot(obj_vals_fcm);
+</pre><img vspace="5" hspace="5" src="sy2_04.png" alt=""> <img vspace="5" hspace="5" src="sy2_05.png" alt=""> <img vspace="5" hspace="5" src="sy2_06.png" alt=""> <img vspace="5" hspace="5" src="sy2_07.png" alt=""> <img vspace="5" hspace="5" src="sy2_08.png" alt=""> <h2 id="11">displaying accuracy of fcm</h2><pre class="codeinput">labelled_img_fcm = get_labelled_img(img_fcm, means_fcm);
+mse_fcm = get_accuracy(input_image,labelled_img_fcm);
+imshow(labelled_img_fcm);
+display(mse_fcm);
+</pre><pre class="codeoutput">
+mse_fcm =
+
+  594.4937
+
+</pre><img vspace="5" hspace="5" src="sy2_09.png" alt=""> <h2 id="12">performing fcm_s</h2><pre class="codeinput">q = 2;
+alpha = 1;
+[img_fcm_s, means_fcm_s, memberships_fcm_s, obj_vals_fcm_s, n_iter_fcm_s] = fcm_s(input_image_noisy, q, alpha, means, imageMask, memberships,3);
+</pre><h2 id="13">plotting fcm_s images and obj_func vs iterations</h2><pre class="codeinput"><span class="keyword">for</span> k = 1:4
+    figure();
+    imshow(img_fcm_s(:,:,k));
+<span class="keyword">end</span>
+figure();
+plot(obj_vals_fcm_s);
+</pre><img vspace="5" hspace="5" src="sy2_10.png" alt=""> <img vspace="5" hspace="5" src="sy2_11.png" alt=""> <img vspace="5" hspace="5" src="sy2_12.png" alt=""> <img vspace="5" hspace="5" src="sy2_13.png" alt=""> <img vspace="5" hspace="5" src="sy2_14.png" alt=""> <h2 id="14">displaying accuracy of fcm_s</h2><pre class="codeinput">labelled_img_fcm_s = get_labelled_img(img_fcm_s, means_fcm_s);
+acc_fcm_s = get_accuracy(input_image,labelled_img_fcm_s);
+imshow(labelled_img_fcm_s);
+display(acc_fcm_s);
+</pre><pre class="codeoutput">
+acc_fcm_s =
+
+  149.8746
+
+</pre><img vspace="5" hspace="5" src="sy2_15.png" alt=""> <h2 id="15">performing fcm_s1</h2><pre class="codeinput">q = 2;
+alpha = 1;
+[img_fcm_s1, means_fcm_s1, memberships_fcm_s1, obj_vals_fcm_s1, n_iter_fcm_s1] = fcm_s1(input_image_noisy, q, alpha, means, imageMask, memberships,3);
+</pre><h2 id="16">plotting fcm_s1 images and obj_func vs iterations</h2><pre class="codeinput"><span class="keyword">for</span> k = 1:4
+    figure();
+    imshow(img_fcm_s1(:,:,k));
+<span class="keyword">end</span>
+figure();
+plot(obj_vals_fcm_s1);
+</pre><img vspace="5" hspace="5" src="sy2_16.png" alt=""> <img vspace="5" hspace="5" src="sy2_17.png" alt=""> <img vspace="5" hspace="5" src="sy2_18.png" alt=""> <img vspace="5" hspace="5" src="sy2_19.png" alt=""> <img vspace="5" hspace="5" src="sy2_20.png" alt=""> <h2 id="17">displaying accuracy of fcm_s1</h2><pre class="codeinput">labelled_img_fcm_s1 = get_labelled_img(img_fcm_s1, means_fcm_s1);
+mse_fcm_s1 = get_accuracy(input_image,labelled_img_fcm_s1);
+imshow(labelled_img_fcm_s1);
+display(mse_fcm_s1);
+</pre><pre class="codeoutput">
+mse_fcm_s1 =
+
+  143.1565
+
+</pre><img vspace="5" hspace="5" src="sy2_21.png" alt=""> <h2 id="18">performing fcm_en</h2><pre class="codeinput">q = 2;
+beta = 1;
+xp=input_image;
+input_image_mean = sum(sum(input_image))/sum(sum(imageMask));
+
+wts=weights(3);
+wb=conv2(input_image,wts,<span class="string">'same'</span>);
+input_image_en = (input_image + beta.*(wb.*imageMask))./(1+beta);
+<span class="comment">% % modifying inputs</span>
+res_en = input_image_en;
+<span class="comment">% res_en = res_en + cmp;</span>
+
+[init_labels_en, init_means_en] = kmeans(reshape(res_en, [m*n, 1]), 4);
+
+<span class="comment">% while(true)</span>
+<span class="comment">%     lastwarn('');</span>
+<span class="comment">%     [init_labels_en, init_means_en] = kmeans(reshape(res_en, [m*n, 1]), 4);</span>
+<span class="comment">%     [warnMsg, warnId] = lastwarn;</span>
+<span class="comment">%     if ((isempty(warnMsg)) &amp;&amp; (any(init_means(:) == -1)))</span>
+<span class="comment">%         break;</span>
+<span class="comment">%     end</span>
+<span class="comment">% end</span>
+init_labels_en = reshape(init_labels_en,[m,n]);
+
+means_en = [];
+memberships_en = [];
+<span class="keyword">for</span> k=1:4
+    <span class="keyword">if</span> (init_means_en(k) ~= -1)
+        mean_en = init_means_en(k);
+        means_en = [means_en; mean_en];
+        tmp = zeros(m, n);
+        tmp(init_labels_en == k) = 1;
+        memberships_en = cat(3, memberships_en, tmp);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+<span class="comment">% performing fcm_en</span>
+[img_fcm_en, means_fcm_en, memberships_fcm_en, obj_vals_fcm_en, n_iter_fcm_en] = fcm(input_image_en, q, means_en, imageMask, memberships_en);
+</pre><h2 id="19">plotting fcm_en images and obj_func vs iterations</h2><pre class="codeinput"><span class="keyword">for</span> k = 1:4
+    figure();
+    imshow(img_fcm_en(:,:,k));
+<span class="keyword">end</span>
+figure();
+plot(obj_vals_fcm_en);
+</pre><img vspace="5" hspace="5" src="sy2_22.png" alt=""> <img vspace="5" hspace="5" src="sy2_23.png" alt=""> <img vspace="5" hspace="5" src="sy2_24.png" alt=""> <img vspace="5" hspace="5" src="sy2_25.png" alt=""> <img vspace="5" hspace="5" src="sy2_26.png" alt=""> <h2 id="20">displaying accuracy of fcm_en</h2><pre class="codeinput">labelled_img_fcm_en = get_labelled_img(img_fcm_en, means_fcm_en);
+mse_fcm_en = get_accuracy(input_image,labelled_img_fcm_en);
+imshow(labelled_img_fcm_en);
+display(mse_fcm_en);
+</pre><pre class="codeoutput">
+mse_fcm_en =
+
+   23.3744
+
+</pre><img vspace="5" hspace="5" src="sy2_27.png" alt=""> <h2 id="21">performing fgfcm</h2><pre class="codeinput">q = 2;
+beta = 1;
+lambda_s=1;
+lambda_g=1;
+N=51;
+X=(N-1)/2;
+
+wts=weights(N);
+wb=conv2(input_image,wts,<span class="string">'same'</span>);
+wbs=conv2(input_image.^2,wts,<span class="string">'same'</span>);
+sig=input_image.^2+wbs-2*input_image.*wb;
+
+Sijxj=zeros(size(input_image));
+Sij=zeros(size(input_image));
+<span class="keyword">for</span> i = -X:X
+    <span class="keyword">for</span> j = -X:X
+        <span class="keyword">if</span> i==0 &amp;&amp; j==0
+            <span class="keyword">break</span>;
+        <span class="keyword">end</span>
+        xi1 = (circshift(input_image,[i j]));
+        x1=(xi1-input_image).^2;
+        c=ones(size(input_image))*exp(1);
+        ss=c.^(-max(abs(i),abs(j))/lambda_s);
+        sij1=c.^(-x1./(lambda_g*sig)).*ss;
+        Sijxj=Sijxj+sij1.*xi1;
+        Sij=Sij+sij1;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+input_image_fgfcm=Sijxj./Sij;
+
+input_image_fgfcm(isnan(input_image_fgfcm))=0;
+<span class="comment">% figure();</span>
+<span class="comment">% imshow(input_image_fgfcm);</span>
+
+<span class="comment">%-------------------------------------------------------------------------------------------</span>
+<span class="comment">% modifying inputs</span>
+res_fgfcm = input_image_fgfcm;
+<span class="comment">% res_fgfcm = res_fgfcm + cmp;</span>
+[init_labels_fgfcm, init_means_fgfcm] = kmeans(reshape(res_fgfcm, [m*n, 1]), 4);
+
+<span class="comment">% while(true)</span>
+<span class="comment">%     lastwarn('');</span>
+<span class="comment">%     [init_labels_fgfcm, init_means_fgfcm] = kmeans(reshape(res_fgfcm, [m*n, 1]), 4);</span>
+<span class="comment">%     [warnMsg, warnId] = lastwarn;</span>
+<span class="comment">%     if ((isempty(warnMsg)) &amp;&amp; (any(init_means(:) == -1)))</span>
+<span class="comment">%         break;</span>
+<span class="comment">%     end</span>
+<span class="comment">% end</span>
+
+init_labels_fgfcm = reshape(init_labels_fgfcm,[m,n]);
+<span class="comment">% disp('atleast');</span>
+means_fgfcm = [];
+memberships_fgfcm = [];
+<span class="keyword">for</span> k=1:4
+    <span class="keyword">if</span> (init_means_fgfcm(k) ~= -1)
+        mean_fgfcm = init_means_fgfcm(k);
+        means_fgfcm = [means_fgfcm; mean_fgfcm];
+        tmp = zeros(m, n);
+        tmp(init_labels_fgfcm == k) = 1;
+        memberships_fgfcm = cat(3, memberships_fgfcm, tmp);
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+<span class="comment">% performing fcm_fgfcm</span>
+<span class="comment">% disp('before');</span>
+[img_fcm_fgfcm, means_fcm_fgfcm, memberships_fcm_fgfcm, obj_vals_fcm_fgfcm, n_iter_fcm_fgfcm] = fcm(input_image_fgfcm, q, means_fgfcm, imageMask, memberships_fgfcm);
+</pre><h2 id="22">plotting fcm_fgfcm images and obj_func vs iterations</h2><p>st='../results/lg_'; disp('after');</p><pre class="codeinput"><span class="keyword">for</span> k = 1:4
+    figure();
+    imshow(img_fcm_fgfcm(:,:,k));
+    <span class="comment">% saveas(gcf,strcat(st,num2str(lambda_g),'_1.png'));</span>
+<span class="keyword">end</span>
+
+figure();
+plot(obj_vals_fcm_fgfcm);
+<span class="comment">% saveas(gcf,strcat(st,num2str(lambda_g),'_plot.png'));</span>
+</pre><img vspace="5" hspace="5" src="sy2_28.png" alt=""> <img vspace="5" hspace="5" src="sy2_29.png" alt=""> <img vspace="5" hspace="5" src="sy2_30.png" alt=""> <img vspace="5" hspace="5" src="sy2_31.png" alt=""> <img vspace="5" hspace="5" src="sy2_32.png" alt=""> <h2 id="23">displaying accuracy of fgfcm</h2><pre class="codeinput">labelled_img_fcm_fgfcm = get_labelled_img(img_fcm_fgfcm, means_fcm_fgfcm);
+mse_fcm_fgfcm = get_accuracy(input_image,labelled_img_fcm_fgfcm);
+imshow(labelled_img_fcm_fgfcm);
+display(mse_fcm_fgfcm);
+</pre><pre class="codeoutput">
+mse_fcm_fgfcm =
+
+    1.8561
+
+</pre><img vspace="5" hspace="5" src="sy2_33.png" alt=""> <h2 id="24">performing frfcm</h2><pre class="codeinput">q =2;
+cluster=4;
+se=3;
+w_size=3;
+[center1,U1,obj_vals_frfcm,t1]=FRFCM(double(input_image_noisyfr),cluster,se,w_size,q);
+f_seg=fcm_image(input_imagefr,U1,center1);
+figure,imshow(f_seg);title(<span class="string">'segmentated result'</span>);
+</pre><img vspace="5" hspace="5" src="sy2_34.png" alt=""> <h2 id="25">plotting frfcm images and obj_func vs iterations</h2><pre class="codeinput">figure();
+plot(obj_vals_frfcm);
+</pre><img vspace="5" hspace="5" src="sy2_35.png" alt=""> <h2 id="26">displaying mse of frfcm</h2><pre class="codeinput">mse_frfcm = get_accuracy(input_imagefr./256,f_seg./256);
+display(mse_frfcm);
+</pre><pre class="codeoutput">
+mse_frfcm =
+
+     5
+
+</pre><h2 id="27">defining functions</h2><pre class="codeinput"><span class="keyword">function</span> wts = weights(n)
+    x=n^2-1;
+    wts=ones(n,n)*(1/x);
+    t=(n+1)/2;
+    wts(t,t)=0;
+<span class="keyword">end</span>
+<span class="keyword">function</span> objfunc = get_objfunc_fcm(img, img_mask, q, means, memberships)
+    objfunc = 0;
+    <span class="keyword">for</span> k = 1:length(means)
+        mean = means(k);
+        membership = memberships(:,:,k);
+<span class="comment">%         XX=mean.*img_mask;</span>
+        <span class="comment">%disp(((img - mean.*img_mask).^2));</span>
+        objfunc = objfunc + sum(sum((membership.^q).*((img.*img_mask - mean.*img_mask).^2)));
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> means = get_means_fcm(img, img_mask, q, means, memberships)
+    <span class="keyword">for</span> k = 1:length(means)
+        membership = memberships(:,:,k);
+        mean = sum(sum((membership.^q).*(img.*img_mask)))/sum(sum(membership.^q));
+        means(k) = mean;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> memberships = get_memberships_fcm(img, img_mask, q, means, memberships)
+    <span class="keyword">for</span> k = 1:length(means)
+        mean = means(k);
+        d = ((img) - (mean)).^2;
+        membership = (1./d).^(1/(q-1));
+        membership(img_mask==0) = 0;
+        memberships(:,:,k) = membership;
+    <span class="keyword">end</span>
+    <span class="keyword">for</span> i = 1:size(img,1)
+        <span class="keyword">for</span> j = 1:size(img,2)
+            <span class="comment">%if(img_mask(i,j)==1)</span>
+            memberships(i,j,:) = memberships(i,j,:)/sum(memberships(i,j,:));
+            <span class="comment">%end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> [img, means, memberships, obj_vals, n_iter] = fcm(input_image, q, means, imageMask, memberships)
+    prev_objfunc = get_objfunc_fcm(input_image, imageMask, q, means, memberships);
+    n_iter = 0;
+    obj_vals = [];
+    obj_vals = [obj_vals prev_objfunc];
+
+    <span class="keyword">while</span>(true)
+        n_iter = n_iter + 1;
+        means = get_means_fcm(input_image, imageMask, q, means, memberships);
+        memberships = get_memberships_fcm(input_image, imageMask, q, means, memberships);
+        memberships(isnan(memberships))=0;
+        curr_objfunc = get_objfunc_fcm(input_image, imageMask, q, means, memberships);
+        obj_vals = [obj_vals curr_objfunc];
+
+        <span class="keyword">if</span> abs(curr_objfunc - prev_objfunc) &lt; 0.00001 || n_iter &gt;= 100
+            <span class="keyword">break</span>;
+        <span class="keyword">end</span>
+        prev_objfunc = curr_objfunc;
+    <span class="keyword">end</span>
+
+    img = zeros(size(input_image,1),size(input_image,2),length(means));
+
+    <span class="keyword">for</span> i = 1:size(input_image,1)
+        <span class="keyword">for</span> j = 1:size(input_image,2)
+            <span class="keyword">if</span> imageMask(i,j)==1
+                [~,max_ind] = max(memberships(i,j,:));
+                img(i,j,max_ind) = 1;
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> objfunc = get_objfunc_fcm_s(img, img_mask, q, alpha, means, memberships,wb,wbs)
+    objfunc = 0;
+    <span class="keyword">for</span> k = 1:length(means)
+        mean = means(k);
+        membership = memberships(:,:,k);
+        objfunc = objfunc + sum(sum((membership.^q).*((img.*img_mask - mean.*img_mask).^2)));
+        vi=mean.*img_mask;
+        dj=vi.^2+wbs-2*vi.*wb;
+
+        objfunc = objfunc + ( alpha * sum(sum((membership.^q).*(dj))) );
+<span class="comment">        %{
+</span><span class="comment">        x1 = (circshift(img,1,1));
+</span><span class="comment">        x2 = (circshift(img,-1,1));
+</span><span class="comment">        x3 = (circshift(img,1,2));
+</span><span class="comment">        x4 = (circshift(img,-1,2));
+</span><span class="comment">        objfunc = objfunc + ( alpha / 4 * sum(sum((membership.^q).*((x1.*img_mask - mean.*img_mask).^2))) );
+</span><span class="comment">        objfunc = objfunc + ( alpha / 4 * sum(sum((membership.^q).*((x2.*img_mask - mean.*img_mask).^2))) );
+</span><span class="comment">        objfunc = objfunc + ( alpha / 4 * sum(sum((membership.^q).*((x3.*img_mask - mean.*img_mask).^2))) );
+</span><span class="comment">        objfunc = objfunc + ( alpha / 4 * sum(sum((membership.^q).*((x4.*img_mask - mean.*img_mask).^2))) );
+</span><span class="comment">        %}
+</span>    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> means = get_means_fcm_s(img, img_mask, q, alpha, means, memberships,wb,wbs)
+    <span class="keyword">for</span> k = 1:length(means)
+        membership = memberships(:,:,k);
+
+        mean = sum(sum((membership.^q).*((img + (alpha).*wb).*img_mask)))/((1+alpha)*sum(sum(membership.^q)));
+<span class="comment">        %{
+</span><span class="comment">        x1 = (circshift(img,1,1));
+</span><span class="comment">        x2 = (circshift(img,-1,1));
+</span><span class="comment">        x3 = (circshift(img,1,2));
+</span><span class="comment">        x4 = (circshift(img,-1,2));
+</span><span class="comment">        neighbor_sum = x1+x2+x3+x4;
+</span><span class="comment">        mean = sum(sum((membership.^q).*((img + (alpha/4).*neighbor_sum).*img_mask)))/((1+alpha)*sum(sum(membership.^q)));
+</span><span class="comment">        %mean = sum(sum((membership.^q).*(img.*img_mask)))/sum(sum(membership.^q));
+</span><span class="comment">        %}
+</span>        means(k) = mean;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> memberships = get_memberships_fcm_s(img, img_mask, q, alpha, means, memberships,wb,wbs)
+    <span class="keyword">for</span> k = 1:length(means)
+        mean = means(k);
+        d = (((img.*img_mask) - (mean.*img_mask)).^2);
+
+        vi=mean.*img_mask;
+        dj=vi.^2+wbs-2*vi.*wb;
+
+        d = d + ( (alpha).*(dj) );
+
+<span class="comment">        %{
+</span><span class="comment">        x1 = (circshift(img,1,1));
+</span><span class="comment">        x2 = (circshift(img,-1,1));
+</span><span class="comment">        x3 = (circshift(img,1,2));
+</span><span class="comment">        x4 = (circshift(img,-1,2));
+</span><span class="comment">        d = d + ( (alpha / 4).*((x1.*img_mask - mean.*img_mask).^2) );
+</span><span class="comment">        d = d + ( (alpha / 4).*((x2.*img_mask - mean.*img_mask).^2) );
+</span><span class="comment">        d = d + ( (alpha / 4).*((x3.*img_mask - mean.*img_mask).^2) );
+</span><span class="comment">        d = d + ( (alpha / 4).*((x4.*img_mask - mean.*img_mask).^2) );
+</span><span class="comment">        %}
+</span>        membership = (1./d).^(1/(q-1));
+        membership(img_mask==0) = 0;
+        memberships(:,:,k) = membership;
+    <span class="keyword">end</span>
+    <span class="keyword">for</span> i = 1:size(img,1)
+        <span class="keyword">for</span> j = 1:size(img,2)
+            <span class="keyword">if</span>(img_mask(i,j)==1)
+                memberships(i,j,:) = memberships(i,j,:)/sum(memberships(i,j,:));
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> [img, means, memberships, obj_vals, n_iter] = fcm_s(input_image, q, alpha, means, imageMask, memberships,n)
+    wts=weights(n);
+    wb=conv2(input_image,wts,<span class="string">'same'</span>);
+    wbs=conv2(input_image.^2,wts,<span class="string">'same'</span>);
+    prev_objfunc =  get_objfunc_fcm_s(input_image, imageMask, q, alpha, means, memberships,wb,wbs);
+    n_iter = 0;
+    obj_vals = [];
+    obj_vals = [obj_vals prev_objfunc];
+    <span class="keyword">while</span>(true)
+        n_iter = n_iter + 1;
+        means = get_means_fcm_s(input_image, imageMask, q, alpha, means, memberships,wb,wbs);
+        memberships = get_memberships_fcm_s(input_image, imageMask, q, alpha, means, memberships,wb,wbs);
+
+        curr_objfunc = get_objfunc_fcm_s(input_image, imageMask, q, alpha, means, memberships,wb,wbs);
+        obj_vals = [obj_vals curr_objfunc];
+
+        <span class="keyword">if</span> abs(curr_objfunc - prev_objfunc) &lt; 0.00001 || n_iter &gt;= 100
+            <span class="keyword">break</span>;
+        <span class="keyword">end</span>
+        prev_objfunc = curr_objfunc;
+    <span class="keyword">end</span>
+
+    img = zeros(size(input_image,1),size(input_image,2),length(means));
+
+    <span class="keyword">for</span> i = 1:size(input_image,1)
+        <span class="keyword">for</span> j = 1:size(input_image,2)
+            <span class="keyword">if</span> imageMask(i,j)==1
+                [~,max_ind] = max(memberships(i,j,:));
+                img(i,j,max_ind) = 1;
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> objfunc = get_objfunc_fcm_s1(img, img_mask, q, alpha, means, memberships,wb)
+    objfunc = 0;
+    <span class="keyword">for</span> k = 1:length(means)
+        mean = means(k);
+        membership = memberships(:,:,k);
+        objfunc = objfunc + sum(sum((membership.^q).*((img.*img_mask - mean.*img_mask).^2)));
+
+        objfunc = objfunc + ( alpha * sum(sum((membership.^q).*((wb.*img_mask - mean.*img_mask).^2))) );
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> means = get_means_fcm_s1(img, img_mask, q, alpha, means, memberships,wb)
+    <span class="keyword">for</span> k = 1:length(means)
+        membership = memberships(:,:,k);
+        mean = sum(sum((membership.^q).*((img + (alpha).*wb).*img_mask)))/((1+alpha)*sum(sum(membership.^q)));
+        means(k) = mean;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> memberships = get_memberships_fcm_s1(img, img_mask, q, alpha, means, memberships,wb)
+    <span class="keyword">for</span> k = 1:length(means)
+        mean = means(k);
+        d = (((img.*img_mask) - (mean.*img_mask)).^2);
+
+        d = d + ( (alpha).*((wb.*img_mask - mean.*img_mask).^2) );
+        membership = (1./d).^(1/(q-1));
+        membership(img_mask==0) = 0;
+        memberships(:,:,k) = membership;
+    <span class="keyword">end</span>
+    <span class="keyword">for</span> i = 1:size(img,1)
+        <span class="keyword">for</span> j = 1:size(img,2)
+            <span class="keyword">if</span>(img_mask(i,j)==1)
+                memberships(i,j,:) = memberships(i,j,:)/sum(memberships(i,j,:));
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="keyword">function</span> [img, means, memberships, obj_vals, n_iter] = fcm_s1(input_image, q, alpha, means, imageMask, memberships,n)
+    wts=weights(n);
+    wb=conv2(input_image,wts,<span class="string">'same'</span>);
+    prev_objfunc = get_objfunc_fcm_s1(input_image, imageMask, q, alpha, means, memberships,wb);
+    n_iter = 0;
+    obj_vals = [];
+    obj_vals = [obj_vals prev_objfunc];
+
+    <span class="keyword">while</span>(true)
+        n_iter = n_iter + 1;
+
+        means = get_means_fcm_s1(input_image, imageMask, q, alpha, means, memberships,wb);
+        memberships = get_memberships_fcm_s1(input_image, imageMask, q, alpha, means, memberships,wb);
+
+        curr_objfunc = get_objfunc_fcm_s1(input_image, imageMask, q, alpha, means, memberships,wb);
+        obj_vals = [obj_vals curr_objfunc];
+
+        <span class="keyword">if</span> abs(curr_objfunc - prev_objfunc) &lt; 0.00001 || n_iter &gt;= 100
+            <span class="keyword">break</span>;
+        <span class="keyword">end</span>
+        prev_objfunc = curr_objfunc;
+    <span class="keyword">end</span>
+
+    img = zeros(size(input_image,1),size(input_image,2),length(means));
+
+    <span class="keyword">for</span> i = 1:size(input_image,1)
+        <span class="keyword">for</span> j = 1:size(input_image,2)
+            <span class="keyword">if</span> imageMask(i,j)==1
+                [~,max_ind] = max(memberships(i,j,:));
+                img(i,j,max_ind) = 1;
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+<span class="comment">% function img = get_labelled_img(input_image,means,memberships)</span>
+<span class="comment">%     img = zeros(size(input_image,1),size(input_image,2));</span>
+<span class="comment">%</span>
+<span class="comment">%     for k = 1:length(means)</span>
+<span class="comment">%         membership = memberships(:,:,k);</span>
+<span class="comment">%         mean = means(k);</span>
+<span class="comment">%         img = img + membership.*mean;</span>
+<span class="comment">%     end</span>
+<span class="comment">% end</span>
+<span class="keyword">function</span> img = get_labelled_img(input_image,means)
+    img = zeros(size(input_image,1),size(input_image,2));
+
+    <span class="keyword">for</span> k = 1:length(means)
+        inpt = input_image(:,:,k);
+        mean = means(k);
+        img = img + inpt.*mean;
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+<span class="keyword">function</span> acc = get_accuracy(img1, img2)
+    acc = sum(sum((img1-img2).^2));
+<span class="keyword">end</span>
+<span class="keyword">function</span> gx=fcm_image(f,U,center)
+[m,n]=size(f);
+[~,idx_f]=max(U);
+imput_f=reshape(idx_f,[m n]);
+imput_ff=zeros(m,n);
+<span class="keyword">for</span> k=1:length(center(:,1))
+    t=(imput_f==k).*center(k);
+    imput_ff=imput_ff+t;
+<span class="keyword">end</span>
+gx=uint8(imput_ff);
+<span class="keyword">end</span>
+<span class="keyword">function</span>  [center, U, obj_U, iter_n]=FRFCM(data,cluster_n,diameter,w_size,q)
+</pre><pre class="codeinput">obj_U = zeros(100, 1);
+data=w_recons_CO(data,strel(<span class="string">'square'</span>,diameter));
+row=size(data, 1);col=size(data,2);
+data_n = row*col;
+data=data(:);
+data_u=unique(data(:));
+n_r=size(data_u,1);
+U=initfcm(cluster_n,n_r);
+sum_U{1}=double(U&gt;0.5);sum_U{2}=sum_U{1};
+N_p=zeros(length(data_u),1);
+   <span class="keyword">for</span> i=1:length(data_u)
+       N_p(i)=sum(data==data_u(i));
+   <span class="keyword">end</span>
+ Num=ones(cluster_n,1)*N_p';
+</pre><h2 id="29">main loop</h2><pre class="codeinput">dist=zeros(cluster_n,n_r);dist2=zeros(cluster_n,data_n);
+<span class="keyword">for</span> w= 1:100
+    mf = Num.*(U.^q);
+    center = mf*data_u./((ones(size(data, 2), 1)*sum(mf'))');
+   <span class="keyword">for</span> k=1: size(center, 1)
+     dist(k, :)=abs(center(k)-data_u)';
+   <span class="keyword">end</span>
+   tmp=dist.^2;
+   h1=(tmp+eps).^(-1/(q-1));
+   U=(h1)./(ones(cluster_n,1)*(sum(h1))+eps);
+<span class="keyword">if</span> w&gt;2
+    sum_U{w}=double(U&gt;0.5);
+    obj_U(w)=sum(sum(abs(sum_U{w}-sum_U{w-1})));
+    <span class="keyword">if</span> obj_U(w)==0,<span class="keyword">break</span>; <span class="keyword">end</span>
+<span class="keyword">end</span>
+<span class="keyword">end</span>
+iter_n = w;
+</pre><h2 id="30">compute membership matrix U according to cluster centers</h2><pre class="codeinput">   <span class="keyword">for</span> k2=1: size(center, 1)
+     dist2(k2, :)=abs(center(k2)-data)';
+   <span class="keyword">end</span>
+   tmp =dist2+eps;
+   h1=(tmp).^(-1/(q-1));
+   U=(h1)./(ones(cluster_n,1)*(sum(h1))+eps);
+</pre><h2 id="31">median filtering</h2><pre class="codeinput">   <span class="keyword">for</span> k3=1: size(center, 1)
+      U1= U (k3,:);
+      U1=reshape(U1,[row,col]);
+      UU=medfilt2(U1,[w_size,w_size]);
+      GG(k3,:)=UU(:);
+   <span class="keyword">end</span>
+   U=GG./(ones(cluster_n,1)*(sum(GG))+eps);
+</pre><pre class="codeinput"><span class="keyword">end</span>
+<span class="keyword">function</span> fobrcbr=w_recons_CO(f,se)
+fe=imerode(f,se);
+fobr=imreconstruct(fe,f);
+fobrc=imcomplement(fobr);
+fobrce=imerode(fobrc,se);
+fobrcbr=imcomplement(imreconstruct(fobrce,fobrc));
+<span class="keyword">end</span>
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+clear; clc;
+close all;
+% load('../data/assignmentSegmentBrain.mat');
+%% performing analysis on sy1
+input_image = imread('../data/sy2.bmp');
+input_imagefr = input_image;
+noise = 0.03;
+%% creating input image and image mask
+% input_image = rgb2gray(input_image);
+input_image = cast(input_image,'double');
+input_image=input_image./256;
+
+imageMask=ones(size(input_image));
+
+% imageMask=zeros(size(input_image));
+% imageMask(input_image~=0) = 1;
+%input_image = imageData.*imageMask;
+%imdb=imageData.*imageMask;
+[m, n] = size(input_image);
+
+%% plotting initial image
+figure();
+imshow(input_image);
+%% introducing noise
+input_image_noisy=imnoise(input_image,'gaussian',noise).*imageMask;
+input_image_noisyfr=imnoise(input_imagefr,'gaussian',0.03);
+imshow(input_image_noisy);
+
+%% modifying image for better k-means classification
+% cmp = ones(size(imageMask)) - imageMask;
+% cmp = cmp*(-1);
+% res = input_image;
+% res = res + cmp;
+
+%% k-means initialization (repeat till we get -1 as a mean and with no warnings of non-convergence under 100 iterations)
+[init_labels, init_means] = kmeans(reshape(input_image_noisy, [m*n, 1]), 4);
+
+% while(true)
+%     lastwarn('');
+%     [init_labels, init_means] = kmeans(reshape(res, [m*n, 1]), 4);
+%     [warnMsg, warnId] = lastwarn;
+%     if ((isempty(warnMsg)) && (any(init_means(:) == -1)))
+%         break;
+%     end 
+% end
+
+init_labels = reshape(init_labels,[m,n]);
+
+% plotting k-means image
+k_means_img = zeros(m,n);
+for k = 1:4
+    k_means_img(init_labels == k) = init_means(k);
+end
+figure();
+imshow(k_means_img);
+
+%% changing data format to operate FCM, keeping binary labelling
+means = [];
+memberships = [];
+for k=1:4
+    if (init_means(k) ~= -1)
+        mean = init_means(k);
+        means = [means; mean];
+        tmp = zeros(m, n);
+        tmp(init_labels == k) = 1;
+        memberships = cat(3, memberships, tmp);
+    end
+end
+%% performing fcm
+q = 2;
+[img_fcm, means_fcm, memberships_fcm, obj_vals_fcm, n_iter_fcm] = fcm(input_image_noisy, q, means, imageMask, memberships);
+%% plotting fcm images and obj_func vs iterations
+
+for k = 1:4
+    figure();
+    imshow(img_fcm(:,:,k));
+end
+figure();
+plot(obj_vals_fcm);
+
+%% displaying accuracy of fcm
+labelled_img_fcm = get_labelled_img(img_fcm, means_fcm);
+mse_fcm = get_accuracy(input_image,labelled_img_fcm);
+imshow(labelled_img_fcm);
+display(mse_fcm);
+%% performing fcm_s
+q = 2;
+alpha = 1;
+[img_fcm_s, means_fcm_s, memberships_fcm_s, obj_vals_fcm_s, n_iter_fcm_s] = fcm_s(input_image_noisy, q, alpha, means, imageMask, memberships,3);
+%% plotting fcm_s images and obj_func vs iterations
+
+for k = 1:4
+    figure();
+    imshow(img_fcm_s(:,:,k));
+end
+figure();
+plot(obj_vals_fcm_s);
+
+%% displaying accuracy of fcm_s
+labelled_img_fcm_s = get_labelled_img(img_fcm_s, means_fcm_s);
+acc_fcm_s = get_accuracy(input_image,labelled_img_fcm_s);
+imshow(labelled_img_fcm_s);
+display(acc_fcm_s);
+%% performing fcm_s1
+q = 2;
+alpha = 1;
+[img_fcm_s1, means_fcm_s1, memberships_fcm_s1, obj_vals_fcm_s1, n_iter_fcm_s1] = fcm_s1(input_image_noisy, q, alpha, means, imageMask, memberships,3);
+
+%% plotting fcm_s1 images and obj_func vs iterations
+
+for k = 1:4
+    figure();
+    imshow(img_fcm_s1(:,:,k));
+end
+figure();
+plot(obj_vals_fcm_s1);
+
+%% displaying accuracy of fcm_s1
+labelled_img_fcm_s1 = get_labelled_img(img_fcm_s1, means_fcm_s1);
+mse_fcm_s1 = get_accuracy(input_image,labelled_img_fcm_s1);
+imshow(labelled_img_fcm_s1);
+display(mse_fcm_s1);
+
+%% performing fcm_en
+
+q = 2;
+beta = 1;
+xp=input_image;
+input_image_mean = sum(sum(input_image))/sum(sum(imageMask));
+
+wts=weights(3);
+wb=conv2(input_image,wts,'same');
+input_image_en = (input_image + beta.*(wb.*imageMask))./(1+beta);
+% % modifying inputs
+res_en = input_image_en;
+% res_en = res_en + cmp;
+
+[init_labels_en, init_means_en] = kmeans(reshape(res_en, [m*n, 1]), 4);
+
+% while(true)
+%     lastwarn('');
+%     [init_labels_en, init_means_en] = kmeans(reshape(res_en, [m*n, 1]), 4);
+%     [warnMsg, warnId] = lastwarn;
+%     if ((isempty(warnMsg)) && (any(init_means(:) == -1)))
+%         break;
+%     end 
+% end
+init_labels_en = reshape(init_labels_en,[m,n]);
+
+means_en = [];
+memberships_en = [];
+for k=1:4
+    if (init_means_en(k) ~= -1)
+        mean_en = init_means_en(k);
+        means_en = [means_en; mean_en];
+        tmp = zeros(m, n);
+        tmp(init_labels_en == k) = 1;
+        memberships_en = cat(3, memberships_en, tmp);
+    end
+end
+% performing fcm_en
+[img_fcm_en, means_fcm_en, memberships_fcm_en, obj_vals_fcm_en, n_iter_fcm_en] = fcm(input_image_en, q, means_en, imageMask, memberships_en);
+
+%% plotting fcm_en images and obj_func vs iterations
+
+for k = 1:4
+    figure();
+    imshow(img_fcm_en(:,:,k));
+end
+figure();
+plot(obj_vals_fcm_en);
+
+%% displaying accuracy of fcm_en
+labelled_img_fcm_en = get_labelled_img(img_fcm_en, means_fcm_en);
+mse_fcm_en = get_accuracy(input_image,labelled_img_fcm_en);
+imshow(labelled_img_fcm_en);
+display(mse_fcm_en);
+
+%% performing fgfcm
+q = 2;
+beta = 1;
+lambda_s=1;
+lambda_g=1;
+N=51;
+X=(N-1)/2;
+
+wts=weights(N);
+wb=conv2(input_image,wts,'same');
+wbs=conv2(input_image.^2,wts,'same');
+sig=input_image.^2+wbs-2*input_image.*wb;
+
+Sijxj=zeros(size(input_image));
+Sij=zeros(size(input_image));
+for i = -X:X
+    for j = -X:X
+        if i==0 && j==0
+            break;     
+        end
+        xi1 = (circshift(input_image,[i j]));
+        x1=(xi1-input_image).^2;   
+        c=ones(size(input_image))*exp(1);  
+        ss=c.^(-max(abs(i),abs(j))/lambda_s);  
+        sij1=c.^(-x1./(lambda_g*sig)).*ss;
+        Sijxj=Sijxj+sij1.*xi1;
+        Sij=Sij+sij1;
+    end
+end
+input_image_fgfcm=Sijxj./Sij;
+
+input_image_fgfcm(isnan(input_image_fgfcm))=0;
+% figure();
+% imshow(input_image_fgfcm);
+
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+% modifying inputs
+res_fgfcm = input_image_fgfcm;
+% res_fgfcm = res_fgfcm + cmp;
+[init_labels_fgfcm, init_means_fgfcm] = kmeans(reshape(res_fgfcm, [m*n, 1]), 4);
+
+% while(true)
+%     lastwarn('');
+%     [init_labels_fgfcm, init_means_fgfcm] = kmeans(reshape(res_fgfcm, [m*n, 1]), 4);
+%     [warnMsg, warnId] = lastwarn;
+%     if ((isempty(warnMsg)) && (any(init_means(:) == -1)))
+%         break;
+%     end 
+% end
+
+init_labels_fgfcm = reshape(init_labels_fgfcm,[m,n]);
+% disp('atleast');
+means_fgfcm = [];
+memberships_fgfcm = [];
+for k=1:4
+    if (init_means_fgfcm(k) ~= -1)
+        mean_fgfcm = init_means_fgfcm(k);
+        means_fgfcm = [means_fgfcm; mean_fgfcm];
+        tmp = zeros(m, n);
+        tmp(init_labels_fgfcm == k) = 1;
+        memberships_fgfcm = cat(3, memberships_fgfcm, tmp);
+    end
+end
+% performing fcm_fgfcm
+% disp('before');
+[img_fcm_fgfcm, means_fcm_fgfcm, memberships_fcm_fgfcm, obj_vals_fcm_fgfcm, n_iter_fcm_fgfcm] = fcm(input_image_fgfcm, q, means_fgfcm, imageMask, memberships_fgfcm);
+%% plotting fcm_fgfcm images and obj_func vs iterations
+% st='../results/lg_';
+% disp('after');
+for k = 1:4
+    figure();
+    imshow(img_fcm_fgfcm(:,:,k));
+    % saveas(gcf,strcat(st,num2str(lambda_g),'_1.png'));
+end
+
+figure();
+plot(obj_vals_fcm_fgfcm);
+% saveas(gcf,strcat(st,num2str(lambda_g),'_plot.png'));
+%% displaying accuracy of fgfcm
+labelled_img_fcm_fgfcm = get_labelled_img(img_fcm_fgfcm, means_fcm_fgfcm);
+mse_fcm_fgfcm = get_accuracy(input_image,labelled_img_fcm_fgfcm);
+imshow(labelled_img_fcm_fgfcm);
+display(mse_fcm_fgfcm);
+
+%% performing frfcm
+q =2;    
+cluster=4;
+se=3;
+w_size=3;
+[center1,U1,obj_vals_frfcm,t1]=FRFCM(double(input_image_noisyfr),cluster,se,w_size,q);
+f_seg=fcm_image(input_imagefr,U1,center1);
+figure,imshow(f_seg);title('segmentated result');
+%% plotting frfcm images and obj_func vs iterations
+
+figure();
+plot(obj_vals_frfcm);
+
+%% displaying mse of frfcm
+mse_frfcm = get_accuracy(input_imagefr./256,f_seg./256);
+display(mse_frfcm);
+
+%% defining functions
+function wts = weights(n)
+    x=n^2-1;
+    wts=ones(n,n)*(1/x);
+    t=(n+1)/2;
+    wts(t,t)=0;
+end
+function objfunc = get_objfunc_fcm(img, img_mask, q, means, memberships)
+    objfunc = 0;   
+    for k = 1:length(means)
+        mean = means(k);
+        membership = memberships(:,:,k);
+%         XX=mean.*img_mask;
+        %disp(((img - mean.*img_mask).^2));
+        objfunc = objfunc + sum(sum((membership.^q).*((img.*img_mask - mean.*img_mask).^2)));
+    end
+end
+
+function means = get_means_fcm(img, img_mask, q, means, memberships)
+    for k = 1:length(means)
+        membership = memberships(:,:,k);
+        mean = sum(sum((membership.^q).*(img.*img_mask)))/sum(sum(membership.^q));
+        means(k) = mean;
+    end
+end
+
+function memberships = get_memberships_fcm(img, img_mask, q, means, memberships)
+    for k = 1:length(means)
+        mean = means(k);        
+        d = ((img) - (mean)).^2;
+        membership = (1./d).^(1/(q-1));
+        membership(img_mask==0) = 0;
+        memberships(:,:,k) = membership;
+    end
+    for i = 1:size(img,1)
+        for j = 1:size(img,2)
+            %if(img_mask(i,j)==1)
+            memberships(i,j,:) = memberships(i,j,:)/sum(memberships(i,j,:));
+            %end
+        end
+    end
+end
+
+function [img, means, memberships, obj_vals, n_iter] = fcm(input_image, q, means, imageMask, memberships)
+    prev_objfunc = get_objfunc_fcm(input_image, imageMask, q, means, memberships);
+    n_iter = 0;
+    obj_vals = [];
+    obj_vals = [obj_vals prev_objfunc];
+    
+    while(true)
+        n_iter = n_iter + 1;
+        means = get_means_fcm(input_image, imageMask, q, means, memberships);
+        memberships = get_memberships_fcm(input_image, imageMask, q, means, memberships);
+        memberships(isnan(memberships))=0;
+        curr_objfunc = get_objfunc_fcm(input_image, imageMask, q, means, memberships);
+        obj_vals = [obj_vals curr_objfunc];
+        
+        if abs(curr_objfunc - prev_objfunc) < 0.00001 || n_iter >= 100
+            break;     
+        end
+        prev_objfunc = curr_objfunc;
+    end
+    
+    img = zeros(size(input_image,1),size(input_image,2),length(means));
+
+    for i = 1:size(input_image,1)
+        for j = 1:size(input_image,2)
+            if imageMask(i,j)==1
+                [~,max_ind] = max(memberships(i,j,:));
+                img(i,j,max_ind) = 1;
+            end
+        end
+    end
+
+end
+
+function objfunc = get_objfunc_fcm_s(img, img_mask, q, alpha, means, memberships,wb,wbs)
+    objfunc = 0;
+    for k = 1:length(means)
+        mean = means(k);
+        membership = memberships(:,:,k);
+        objfunc = objfunc + sum(sum((membership.^q).*((img.*img_mask - mean.*img_mask).^2)));
+        vi=mean.*img_mask;
+        dj=vi.^2+wbs-2*vi.*wb;
+        
+        objfunc = objfunc + ( alpha * sum(sum((membership.^q).*(dj))) );
+        %{
+        x1 = (circshift(img,1,1));
+        x2 = (circshift(img,-1,1));
+        x3 = (circshift(img,1,2));
+        x4 = (circshift(img,-1,2));
+        objfunc = objfunc + ( alpha / 4 * sum(sum((membership.^q).*((x1.*img_mask - mean.*img_mask).^2))) );
+        objfunc = objfunc + ( alpha / 4 * sum(sum((membership.^q).*((x2.*img_mask - mean.*img_mask).^2))) );
+        objfunc = objfunc + ( alpha / 4 * sum(sum((membership.^q).*((x3.*img_mask - mean.*img_mask).^2))) );
+        objfunc = objfunc + ( alpha / 4 * sum(sum((membership.^q).*((x4.*img_mask - mean.*img_mask).^2))) );
+        %}
+    end
+end
+
+function means = get_means_fcm_s(img, img_mask, q, alpha, means, memberships,wb,wbs)
+    for k = 1:length(means)
+        membership = memberships(:,:,k);
+        
+        mean = sum(sum((membership.^q).*((img + (alpha).*wb).*img_mask)))/((1+alpha)*sum(sum(membership.^q)));
+        %{
+        x1 = (circshift(img,1,1));
+        x2 = (circshift(img,-1,1));
+        x3 = (circshift(img,1,2));
+        x4 = (circshift(img,-1,2));
+        neighbor_sum = x1+x2+x3+x4;
+        mean = sum(sum((membership.^q).*((img + (alpha/4).*neighbor_sum).*img_mask)))/((1+alpha)*sum(sum(membership.^q)));
+        %mean = sum(sum((membership.^q).*(img.*img_mask)))/sum(sum(membership.^q));
+        %}
+        means(k) = mean;
+    end
+end
+
+function memberships = get_memberships_fcm_s(img, img_mask, q, alpha, means, memberships,wb,wbs)
+    for k = 1:length(means)
+        mean = means(k);
+        d = (((img.*img_mask) - (mean.*img_mask)).^2);
+        
+        vi=mean.*img_mask;
+        dj=vi.^2+wbs-2*vi.*wb;
+        
+        d = d + ( (alpha).*(dj) );
+        
+        %{
+        x1 = (circshift(img,1,1));
+        x2 = (circshift(img,-1,1));
+        x3 = (circshift(img,1,2));
+        x4 = (circshift(img,-1,2));
+        d = d + ( (alpha / 4).*((x1.*img_mask - mean.*img_mask).^2) );
+        d = d + ( (alpha / 4).*((x2.*img_mask - mean.*img_mask).^2) );
+        d = d + ( (alpha / 4).*((x3.*img_mask - mean.*img_mask).^2) );
+        d = d + ( (alpha / 4).*((x4.*img_mask - mean.*img_mask).^2) );
+        %}
+        membership = (1./d).^(1/(q-1));
+        membership(img_mask==0) = 0;
+        memberships(:,:,k) = membership;
+    end
+    for i = 1:size(img,1)
+        for j = 1:size(img,2)
+            if(img_mask(i,j)==1)
+                memberships(i,j,:) = memberships(i,j,:)/sum(memberships(i,j,:));
+            end
+        end
+    end
+end
+
+function [img, means, memberships, obj_vals, n_iter] = fcm_s(input_image, q, alpha, means, imageMask, memberships,n)
+    wts=weights(n);
+    wb=conv2(input_image,wts,'same');
+    wbs=conv2(input_image.^2,wts,'same');
+    prev_objfunc =  get_objfunc_fcm_s(input_image, imageMask, q, alpha, means, memberships,wb,wbs);
+    n_iter = 0;
+    obj_vals = [];
+    obj_vals = [obj_vals prev_objfunc];
+    while(true)
+        n_iter = n_iter + 1;
+        means = get_means_fcm_s(input_image, imageMask, q, alpha, means, memberships,wb,wbs);
+        memberships = get_memberships_fcm_s(input_image, imageMask, q, alpha, means, memberships,wb,wbs);
+        
+        curr_objfunc = get_objfunc_fcm_s(input_image, imageMask, q, alpha, means, memberships,wb,wbs);
+        obj_vals = [obj_vals curr_objfunc];
+        
+        if abs(curr_objfunc - prev_objfunc) < 0.00001 || n_iter >= 100
+            break;     
+        end
+        prev_objfunc = curr_objfunc;
+    end
+    
+    img = zeros(size(input_image,1),size(input_image,2),length(means));
+
+    for i = 1:size(input_image,1)
+        for j = 1:size(input_image,2)
+            if imageMask(i,j)==1
+                [~,max_ind] = max(memberships(i,j,:));
+                img(i,j,max_ind) = 1;
+            end
+        end
+    end
+end
+
+function objfunc = get_objfunc_fcm_s1(img, img_mask, q, alpha, means, memberships,wb)
+    objfunc = 0;
+    for k = 1:length(means)
+        mean = means(k);
+        membership = memberships(:,:,k);
+        objfunc = objfunc + sum(sum((membership.^q).*((img.*img_mask - mean.*img_mask).^2)));
+      
+        objfunc = objfunc + ( alpha * sum(sum((membership.^q).*((wb.*img_mask - mean.*img_mask).^2))) );
+    end
+end
+
+function means = get_means_fcm_s1(img, img_mask, q, alpha, means, memberships,wb)
+    for k = 1:length(means)
+        membership = memberships(:,:,k);
+        mean = sum(sum((membership.^q).*((img + (alpha).*wb).*img_mask)))/((1+alpha)*sum(sum(membership.^q)));
+        means(k) = mean;
+    end
+end
+
+function memberships = get_memberships_fcm_s1(img, img_mask, q, alpha, means, memberships,wb)
+    for k = 1:length(means)
+        mean = means(k);
+        d = (((img.*img_mask) - (mean.*img_mask)).^2);
+        
+        d = d + ( (alpha).*((wb.*img_mask - mean.*img_mask).^2) );
+        membership = (1./d).^(1/(q-1));
+        membership(img_mask==0) = 0;
+        memberships(:,:,k) = membership;
+    end
+    for i = 1:size(img,1)
+        for j = 1:size(img,2)
+            if(img_mask(i,j)==1)
+                memberships(i,j,:) = memberships(i,j,:)/sum(memberships(i,j,:));
+            end
+        end
+    end
+end
+
+function [img, means, memberships, obj_vals, n_iter] = fcm_s1(input_image, q, alpha, means, imageMask, memberships,n)
+    wts=weights(n);
+    wb=conv2(input_image,wts,'same');
+    prev_objfunc = get_objfunc_fcm_s1(input_image, imageMask, q, alpha, means, memberships,wb);
+    n_iter = 0;
+    obj_vals = [];
+    obj_vals = [obj_vals prev_objfunc];
+    
+    while(true)
+        n_iter = n_iter + 1;
+
+        means = get_means_fcm_s1(input_image, imageMask, q, alpha, means, memberships,wb);
+        memberships = get_memberships_fcm_s1(input_image, imageMask, q, alpha, means, memberships,wb);
+        
+        curr_objfunc = get_objfunc_fcm_s1(input_image, imageMask, q, alpha, means, memberships,wb);
+        obj_vals = [obj_vals curr_objfunc];
+        
+        if abs(curr_objfunc - prev_objfunc) < 0.00001 || n_iter >= 100
+            break;     
+        end
+        prev_objfunc = curr_objfunc;
+    end
+    
+    img = zeros(size(input_image,1),size(input_image,2),length(means));
+
+    for i = 1:size(input_image,1)
+        for j = 1:size(input_image,2)
+            if imageMask(i,j)==1
+                [~,max_ind] = max(memberships(i,j,:));
+                img(i,j,max_ind) = 1;
+            end
+        end
+    end
+end
+% function img = get_labelled_img(input_image,means,memberships)
+%     img = zeros(size(input_image,1),size(input_image,2));
+% 
+%     for k = 1:length(means)
+%         membership = memberships(:,:,k);
+%         mean = means(k);
+%         img = img + membership.*mean;
+%     end
+% end
+function img = get_labelled_img(input_image,means)
+    img = zeros(size(input_image,1),size(input_image,2));
+
+    for k = 1:length(means)
+        inpt = input_image(:,:,k);
+        mean = means(k);
+        img = img + inpt.*mean;
+    end
+end
+function acc = get_accuracy(img1, img2)
+    acc = sum(sum((img1-img2).^2));
+end
+function gx=fcm_image(f,U,center)
+[m,n]=size(f);
+[~,idx_f]=max(U);
+imput_f=reshape(idx_f,[m n]); 
+imput_ff=zeros(m,n); 
+for k=1:length(center(:,1))
+    t=(imput_f==k).*center(k);
+    imput_ff=imput_ff+t; 
+end
+gx=uint8(imput_ff);
+end
+function  [center, U, obj_U, iter_n]=FRFCM(data,cluster_n,diameter,w_size,q)
+obj_U = zeros(100, 1);   
+data=w_recons_CO(data,strel('square',diameter));
+row=size(data, 1);col=size(data,2);
+data_n = row*col; 
+data=data(:);
+data_u=unique(data(:));
+n_r=size(data_u,1);
+U=initfcm(cluster_n,n_r);   
+sum_U{1}=double(U>0.5);sum_U{2}=sum_U{1};
+N_p=zeros(length(data_u),1);
+   for i=1:length(data_u)
+       N_p(i)=sum(data==data_u(i)); 
+   end
+ Num=ones(cluster_n,1)*N_p';
+ %% main loop
+dist=zeros(cluster_n,n_r);dist2=zeros(cluster_n,data_n);
+for w= 1:100
+    mf = Num.*(U.^q); 
+    center = mf*data_u./((ones(size(data, 2), 1)*sum(mf'))');
+   for k=1: size(center, 1) 
+     dist(k, :)=abs(center(k)-data_u)';
+   end
+   tmp=dist.^2;
+   h1=(tmp+eps).^(-1/(q-1));
+   U=(h1)./(ones(cluster_n,1)*(sum(h1))+eps); 
+if w>2
+    sum_U{w}=double(U>0.5);
+    obj_U(w)=sum(sum(abs(sum_U{w}-sum_U{w-1})));
+    if obj_U(w)==0,break; end
+end
+end
+iter_n = w; 
+%% compute membership matrix U according to cluster centers
+   for k2=1: size(center, 1) 
+     dist2(k2, :)=abs(center(k2)-data)';
+   end
+   tmp =dist2+eps;
+   h1=(tmp).^(-1/(q-1));
+   U=(h1)./(ones(cluster_n,1)*(sum(h1))+eps);  
+%% median filtering   
+   for k3=1: size(center, 1) 
+      U1= U (k3,:);      
+      U1=reshape(U1,[row,col]); 
+      UU=medfilt2(U1,[w_size,w_size]); 
+      GG(k3,:)=UU(:);
+   end
+   U=GG./(ones(cluster_n,1)*(sum(GG))+eps);  
+end
+function fobrcbr=w_recons_CO(f,se)
+fe=imerode(f,se);
+fobr=imreconstruct(fe,f); 
+fobrc=imcomplement(fobr);
+fobrce=imerode(fobrc,se);
+fobrcbr=imcomplement(imreconstruct(fobrce,fobrc));
+end
+##### SOURCE END #####
+--></body></html>
